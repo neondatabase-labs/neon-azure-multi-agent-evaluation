@@ -4,7 +4,7 @@ CREATE TABLE agent_configs (
   version TEXT,
   prompt_template TEXT,
   tools TEXT[],
-  goal TEXT,
+  goal TEXT,                 -- (e.g. summarization, classification) 
   created_at TIMESTAMP DEFAULT now()
 );
 

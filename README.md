@@ -22,7 +22,7 @@ This project demonstrates how to build, version, and evaluate AI agents using Az
 
 * Python 3.9+
 * An Azure subscription ([create one](https://azure.microsoft.com/free/cognitive-services))
-* Azure AI Developer RBAC role
+* Azure AI Developer [RBAC role](https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/rbac-azure-ai-foundry)
 * Neon Serverless Postgres ([install on Azure](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/neon1722366567200.neon_serverless_postgres_azure_prod))
 
 ---
@@ -39,7 +39,7 @@ This project demonstrates how to build, version, and evaluate AI agents using Az
 
 ### 2. Create Azure AI Agent Project
 
-1. Go to [Azure AI Foundry portal](https://ai.azure.com)
+1. Go to [Azure AI Foundry portal](https://ai.azure.com) or [follow the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal#create-a-hub-and-project-in-azure-ai-foundry-portal).
 2. Create a hub and project
 3. Deploy a model (e.g., GPT-4o)
 4. Get your project connection string and model deployment name
@@ -75,7 +75,7 @@ Switch `AGENT_VERSION` between `v1` and `v2` to test different branches.
 ## Run the Script
 
 ```bash
-python run_agent.py
+python agents.py
 ```
 
 The script will:
@@ -92,7 +92,11 @@ The script will:
 Use SQL to analyze results per version:
 
 ```sql
-SELECT version, COUNT(*) AS runs, AVG(response_length), AVG(latency)
+SELECT version,
+       COUNT(*) AS total_runs,
+       AVG(response_length) AS avg_words,
+       AVG(latency) AS avg_response_time,
+       AVG(CASE WHEN heuristic_success THEN 1 ELSE 0 END) * 100 AS success_rate
 FROM agent_logs
 JOIN agent_configs ON agent_logs.config_id = agent_configs.id
 GROUP BY version;

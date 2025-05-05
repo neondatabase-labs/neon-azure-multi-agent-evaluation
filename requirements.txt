@@ -1,0 +1,5 @@
+azure-ai-projects==1.0.0b7
+requests
+psycopg2-binary
+python-dotenv
+azure-identity
